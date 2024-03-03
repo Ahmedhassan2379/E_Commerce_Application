@@ -2,6 +2,8 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace E_Commerce.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
@@ -30,11 +32,10 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<int>(type: "int", maxLength: 80, nullable: false),
-                    Description = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId1 = table.Column<int>(type: "int", nullable: true)
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -45,22 +46,32 @@ namespace E_Commerce.Infrastructure.Data.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Products_Categories_CategoryId1",
-                        column: x => x.CategoryId1,
-                        principalTable: "Categories",
-                        principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { 1, "this is laptops part", "Laptop" },
+                    { 2, "this is mobiles part", "Mobile" },
+                    { 3, "this is watchs part", "Watch" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "Description", "Name", "Price" },
+                values: new object[,]
+                {
+                    { 1, 1, "One Item", "One", 2000m },
+                    { 2, 2, "Two Item", "Two", 2000m },
+                    { 3, 3, "Three Item", "Three", 2000m }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_CategoryId1",
-                table: "Products",
-                column: "CategoryId1");
         }
 
         /// <inheritdoc />

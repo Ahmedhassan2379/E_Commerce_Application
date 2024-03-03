@@ -18,7 +18,7 @@ namespace E_Commerce.Infrastructure.Repositories
             await _Context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(T id)
+        public async Task DeleteAsync(int id)
         {
             var entity = await _Context.Set<T>().FindAsync(id);
              _Context.Set<T>().Remove(entity);
@@ -47,12 +47,12 @@ namespace E_Commerce.Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
-        public async Task GetAsyncBy(T id)
+        public async Task<T> GetAsync(int id)
         {
-            await _Context.Set<T>().FindAsync(id);
+            return await _Context.Set<T>().FindAsync(id);
         }
 
-        public async Task<T> GetByIdAsync(T id, params Expression<Func<T, object>>[] includes)
+        public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
         {
             IQueryable<T> query = _Context.Set<T>();
             foreach (var item in includes)
@@ -62,7 +62,7 @@ namespace E_Commerce.Infrastructure.Repositories
             return await((DbSet<T>)query).FindAsync(id);
         }
 
-        public async Task UpdateAsync(T id, T entity)
+        public async Task UpdateAsync(int id, T entity)
         {
             var Existedentity = await _Context.Set<T>().FindAsync(id);
             if (Existedentity != null)
