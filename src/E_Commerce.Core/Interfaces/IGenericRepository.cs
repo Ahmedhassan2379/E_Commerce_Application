@@ -1,4 +1,5 @@
-﻿using System;
+﻿using E_Commerce.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace E_Commerce.Core.Interfaces
 {
-    public interface IGenericRepository<T> where  T : class
+    public interface IGenericRepository<T> where  T : BaseEntity<int>
     {
         IEnumerable<T> GetAll();
         Task<IReadOnlyList<T>> GetAllAsync();

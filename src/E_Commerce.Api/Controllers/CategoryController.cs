@@ -1,4 +1,5 @@
-﻿using E_Commerce.Api.Dtos;
+﻿using AutoMapper;
+using E_Commerce.Api.Dtos;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -11,8 +12,10 @@ namespace E_Commerce.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CategoryController(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public CategoryController(IUnitOfWork unitOfWork,IMapper mapper)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
         [HttpGet("allcategory")]
@@ -20,9 +23,11 @@ namespace E_Commerce.Api.Controllers
         {
 
                 var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
+         
                 if (categories is not null)
                 {
-                    return Ok(categories);
+                var result = _mapper.Map<IReadOnlyList<Category>,IReadOnlyList<ListingCategoryDto>>(categories);
+                return Ok(result);
                 }
                 return BadRequest("Not Found");
 
@@ -30,14 +35,15 @@ namespace E_Commerce.Api.Controllers
 
 
         [HttpGet("category-by-id/{id}")]
-        public ActionResult Get(int id)
+        public async Task<ActionResult> Get(int id)
         {
-            var category = _unitOfWork.CategoryRepository.GetAsync(id);
+            var category = await _unitOfWork.CategoryRepository.GetAsync(id);
             if (category is not null)
             {
-                return Ok(category);
+                var newCategory = _mapper.Map<Category, ListingCategoryDto>(category);
+                return Ok(newCategory);
             }
-            return BadRequest("this category not Found");
+            return BadRequest("this category not Found  ");
         }
 
 
@@ -49,11 +55,7 @@ namespace E_Commerce.Api.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var newCategory = new Category
-                    {
-                        Name = category.Name,
-                        Description = category.Description,
-                    };
+                    var newCategory = _mapper.Map<Category>(category);
                     await _unitOfWork.CategoryRepository.AddAsync(newCategory);
                     return Ok("Added Successfully");
                 }
@@ -68,15 +70,14 @@ namespace E_Commerce.Api.Controllers
         }
 
 
-        [HttpPut("update-by-id/{id}")]
-        public async Task<ActionResult> Update(int id,CategoryDto category)
+        [HttpPut("update-by-id")]
+        public async Task<ActionResult> Update(UpdateCategoryDto category)
         {
-            var ExistedCategory = await _unitOfWork.CategoryRepository.GetAsync(id);
+            var ExistedCategory = await _unitOfWork.CategoryRepository.GetAsync(category.Id);
             if(ExistedCategory is not null)
             {
-                ExistedCategory.Name = category.Name;
-                ExistedCategory.Description = category.Description;
-                 await _unitOfWork.CategoryRepository.UpdateAsync(id, ExistedCategory);
+               _mapper.Map(category, ExistedCategory);
+                 await _unitOfWork.CategoryRepository.UpdateAsync(category.Id, ExistedCategory);
                 return Ok("Updated Successfully");
             }
             return BadRequest();

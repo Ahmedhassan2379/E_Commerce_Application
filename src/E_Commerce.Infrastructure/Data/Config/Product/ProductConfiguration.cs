@@ -18,9 +18,9 @@ namespace E_Commerce.Infrastructure.Data.Config
             builder.Property(c => c.Price).HasColumnType("decimal(18,2)");
             //builder.HasOne(x => x.category).WithMany().HasForeignKey(x=>x.CategoryId);
             builder.HasData(
-                new Product { Id = 1, Name = "One", Description = "One Item", Price = 2000, CategoryId = 1 },
-                new Product { Id = 2, Name = "Two", Description = "Two Item", Price = 2000, CategoryId = 2 },
-                new Product { Id = 3, Name = "Three", Description = "Three Item", Price = 2000, CategoryId = 3 }
+                new Product { Id = 1, Name = "One", Description = "One Item", Price = 2000, CategoryId = 1 ,ProductPicture="https://"},
+                new Product { Id = 2, Name = "Two", Description = "Two Item", Price = 2000, CategoryId = 2, ProductPicture = "https://" },
+                new Product { Id = 3, Name = "Three", Description = "Three Item", Price = 2000, CategoryId = 3, ProductPicture = "https://" }
                 );
         }
     }

@@ -1,11 +1,12 @@
-﻿using E_Commerce.Core.Interfaces;
+﻿using E_Commerce.Core.Entities;
+using E_Commerce.Core.Interfaces;
 using E_Commerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace E_Commerce.Infrastructure.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity<int>
     {
         private readonly ApplicationDbContext _Context;
         public GenericRepository(ApplicationDbContext context)
@@ -54,12 +55,12 @@ namespace E_Commerce.Infrastructure.Repositories
 
         public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes)
         {
-            IQueryable<T> query = _Context.Set<T>();
+            IQueryable<T> query = _Context.Set<T>().Where(x=>x.Id==id);
             foreach (var item in includes)
             {
                 query = query.Include(item);
             }
-            return await((DbSet<T>)query).FindAsync(id);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task UpdateAsync(int id, T entity)

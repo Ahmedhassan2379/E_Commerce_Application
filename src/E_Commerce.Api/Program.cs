@@ -5,6 +5,7 @@ using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace E_Commerce.Api
 {
@@ -20,7 +21,7 @@ namespace E_Commerce.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.InfrastructureConfiguration(builder.Configuration);
-                
+            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());    
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
