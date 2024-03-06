@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using E_Commerce.Api.Errors;
 using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Interfaces;
@@ -49,7 +50,7 @@ namespace E_Commerce.Api.Controllers
                 var result = _mapper.Map<ProductDto>(product);
                 return Ok(result);
             }
-            return NotFound();
+            return NotFound(new BaseCommonResponse(404));
         }
 
         [HttpPost("add-product")]
@@ -81,6 +82,24 @@ namespace E_Commerce.Api.Controllers
                 return BadRequest(ex.Message);
             }
             
+        }
+        [HttpDelete("delete-product/{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await _unitOfWork.ProductRepository.DeleteWithPicAsync(id);
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+
+               return BadRequest(ex.Message);
+            }
         }
     }
 }

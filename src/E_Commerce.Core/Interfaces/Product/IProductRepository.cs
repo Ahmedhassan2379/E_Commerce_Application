@@ -12,5 +12,6 @@ namespace E_Commerce.Core.Interfaces
     {
         Task<bool> AddAsync(CreateProductDto entity);
         Task<bool> UpdateAsync(int id,UpdateProductDto entity);
+        Task<bool> DeleteWithPicAsync(int id);
     }
 }

@@ -5,11 +5,11 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{65B18536-E4FF-4A60-91CA-89CA899CA5DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_Commerce.Core", "src\E_Commerce.Core\E_Commerce.Core.csproj", "{08F84DFB-A7F8-48A0-A76E-AA6C8D1AAEEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Commerce.Core", "src\E_Commerce.Core\E_Commerce.Core.csproj", "{08F84DFB-A7F8-48A0-A76E-AA6C8D1AAEEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_Commerce.Infrastructure", "src\E_Commerce.Infrastructure\E_Commerce.Infrastructure.csproj", "{CC34A6B1-3E38-4A50-B95C-D1B2C390EA79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Commerce.Infrastructure", "src\E_Commerce.Infrastructure\E_Commerce.Infrastructure.csproj", "{CC34A6B1-3E38-4A50-B95C-D1B2C390EA79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E_Commerce.Api", "src\E_Commerce.Api\E_Commerce.Api.csproj", "{07DB8746-AB26-484B-9B22-A1B5658CF551}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "E_Commerce.Api", "src\E_Commerce.Api\E_Commerce.Api.csproj", "{07DB8746-AB26-484B-9B22-A1B5658CF551}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

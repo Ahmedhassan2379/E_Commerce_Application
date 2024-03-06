@@ -1,8 +1,13 @@
 
+using E_Commerce.Api.Errors;
+using E_Commerce.Api.Extensions;
+using E_Commerce.Api.MiddleWare;
 using E_Commerce.Core.Interfaces;
 using E_Commerce.Infrastructure;
 using E_Commerce.Infrastructure.Data;
 using E_Commerce.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.FileProviders;
@@ -19,11 +24,11 @@ namespace E_Commerce.Api
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddApiRegisteration();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.InfrastructureConfiguration(builder.Configuration);
-            builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            builder.Services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),"wwwroot")));
+
             //string currentDirectory = Directory.GetCurrentDirectory();
             //string wwwrootPath = Path.Combine(currentDirectory, "wwwroot");
 
@@ -43,6 +48,8 @@ namespace E_Commerce.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<ExceptionMiddleWare>();
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthorization();

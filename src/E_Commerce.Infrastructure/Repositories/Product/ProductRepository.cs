@@ -3,6 +3,7 @@ using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Interfaces;
 using E_Commerce.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
 namespace E_Commerce.Infrastructure.Repositories
@@ -49,7 +50,7 @@ namespace E_Commerce.Infrastructure.Repositories
         }
         public async Task<bool> UpdateAsync(int id,UpdateProductDto entity)
         {
-            var ExistedProduct = await _context.Products.FindAsync(id);
+            var ExistedProduct = await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             if(ExistedProduct is not null)
             {
                 var src = "";
@@ -78,6 +79,9 @@ namespace E_Commerce.Infrastructure.Repositories
                 } 
                 var result = _mapper.Map<Product>(entity);
                 result.ProductPicture = src;
+                result.Id = id;
+                //_context.Products.Remove(ExistedProduct);
+                //_context.Products.Add(result);
                 _context.Products.Update(result);
                 await _context.SaveChangesAsync();
               
@@ -86,6 +90,23 @@ namespace E_Commerce.Infrastructure.Repositories
             return false;
         }
 
+        public async Task<bool> DeleteWithPicAsync(int id)
+        {
+            var ExistedProduct = await _context.Products.FindAsync(id);
+            if(ExistedProduct is not null)
+            {
+                if (!string.IsNullOrEmpty(ExistedProduct.ProductPicture))
+                {
+                    var picInfo = _fileProvider.GetFileInfo(ExistedProduct.ProductPicture);
+                    var root = picInfo.PhysicalPath;
+                    System.IO.File.Delete(root);
+                }
+                _context.Products.Remove(ExistedProduct);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }
 
