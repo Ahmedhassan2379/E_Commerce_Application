@@ -2,6 +2,7 @@
 using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Interfaces;
+using E_Commerce.Core.Sharing;
 using E_Commerce.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -18,6 +19,53 @@ namespace E_Commerce.Infrastructure.Repositories
             _context = context;
             _mapper = mapper;
             _fileProvider = fileProvider;
+        }
+
+        public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams)
+        {
+            var products = await _context.Products.Include(x=>x.category).AsNoTracking().ToListAsync();
+
+            //Searching
+            if (!string.IsNullOrEmpty(productParams.Search))
+            {
+                products = products.Where(x => x.Name.ToLower().Contains(productParams.Search)).ToList();
+            }
+            //Get By CategoryId
+            if (productParams.CategoryId.HasValue)
+            {
+                products = products.Where(x=>x.CategoryId == productParams.CategoryId.Value).ToList();
+            }
+
+            //Sorting
+            if(!string.IsNullOrWhiteSpace(productParams.sort))
+            {
+                switch (productParams.sort)
+                {
+                    case "PriceAsending":
+                        products = products.OrderBy(x=>x.Price).ToList(); 
+                        break;
+                    case "PriceDescinding":
+                        products =products.OrderByDescending(x=>x.Price).ToList();
+                        break;
+                    case "NameDescinding":
+                        products = products.OrderByDescending(x => x.Name).ToList();
+                        break;
+                    case "NameAsending":
+                        products = products.OrderBy(x => x.Name).ToList();
+                        break;
+                    default:
+                        products = products.OrderBy(x=>x.Id).ToList();
+                        break;
+                }
+            }
+            //Paging
+            productParams.PageNumber = productParams.PageNumber > 0 ? productParams.PageNumber : 1;
+            productParams.PageSize = productParams.PageSize > 0 ? productParams.PageSize : 3;
+            products = products.Skip((productParams.PageSize) * (productParams.PageNumber - 1)).Take(productParams.PageSize).ToList();
+
+
+            var result =  _mapper.Map<List<ProductDto>>(products);
+            return result;
         }
 
         public async Task<bool> AddAsync(CreateProductDto entity)

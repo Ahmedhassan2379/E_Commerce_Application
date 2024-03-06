@@ -19,6 +19,11 @@ namespace E_Commerce.Infrastructure.Repositories
             await _Context.SaveChangesAsync();
         }
 
+        public async Task<int> CountAsync()
+        {
+            return await _Context.Set<T>().CountAsync();
+        }
+
         public async Task DeleteAsync(int id)
         {
             var entity = await _Context.Set<T>().FindAsync(id);

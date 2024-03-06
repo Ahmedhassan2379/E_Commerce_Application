@@ -24,6 +24,14 @@ namespace E_Commerce.Api.Extensions
                     return new BadRequestObjectResult(errorResponse);
                 };
             });
+            // Enable CORS
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("corsPolicy", pol =>
+                {
+                    pol.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+                });
+            });
             return services;
         }
     }

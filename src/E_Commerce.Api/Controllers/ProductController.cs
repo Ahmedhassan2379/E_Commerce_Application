@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using E_Commerce.Api.Errors;
+using E_Commerce.Api.Helper;
 using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Interfaces;
+using E_Commerce.Core.Sharing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
@@ -25,18 +27,15 @@ namespace E_Commerce.Api.Controllers
         }
 
         [HttpGet("get-products")]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult> Get([FromQuery]ProductParams productParams)
         {
-            var products = await _unitOfWork.ProductRepository.GetAllAsync(x=>x.category);
-            var result = _mapper.Map<List<ProductDto>>(products);
-            //var options = new JsonSerializerOptions
-            //{
-            //    ReferenceHandler = ReferenceHandler.Preserve
-            //};
-            //string json = JsonSerializer.Serialize(products, options);
+            //var products = await _unitOfWork.ProductRepository.GetAllAsync(x=>x.category);
+            var products = await _unitOfWork.ProductRepository.GetAllAsync(productParams);
+            var totalItems = await _unitOfWork.ProductRepository.CountAsync();
+            var result = _mapper.Map<IReadOnlyList<ProductDto>>(products);
             if (products is not  null )
             {
-                return Ok(result);
+                return Ok(new Pagination<ProductDto>{ Items=result,Count=totalItems,PageNumber=productParams.PageNumber,PageSize = productParams.PageSize});
             }
             return BadRequest("Something Error");
         }

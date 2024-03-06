@@ -52,6 +52,7 @@ namespace E_Commerce.Api
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCors("corsPolicy");
             app.UseAuthorization();
 
 
