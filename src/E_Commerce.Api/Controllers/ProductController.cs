@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using E_Commerce.Api.Dtos;
+using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -53,31 +53,34 @@ namespace E_Commerce.Api.Controllers
         }
 
         [HttpPost("add-product")]
-        public async Task<ActionResult> Add(CreateProductDto product)
+        public async Task<ActionResult> Add([FromForm]CreateProductDto product)
         {
             if(ModelState.IsValid)
             {
-                var newProduct = _mapper.Map<Product>(product);
-               await _unitOfWork.ProductRepository.AddAsync(newProduct);
-                return Ok(newProduct);
+              var result =  await _unitOfWork.ProductRepository.AddAsync(product);
+                return result ? Ok(product):BadRequest();
             }
             return BadRequest();   
         }
 
-        [HttpPut("update-product")]
-        public async Task<ActionResult> Update(UpdateCategoryDto product)
+        [HttpPut("update-product/{id}")]
+        public async Task<ActionResult> Update(int id,[FromForm]UpdateProductDto product)
         {
-            if(ModelState.IsValid)
+            try
             {
-                var existedProduct = await _unitOfWork.ProductRepository.GetAsync(product.Id);
-                if(existedProduct is not null)
+                if (ModelState.IsValid)
                 {
-                    _mapper.Map<UpdateCategoryDto>(existedProduct);
-                    return Ok(existedProduct);
+                    var result = await _unitOfWork.ProductRepository.UpdateAsync(id,product);
+                    return Ok($"{result} Updated Succefully");
                 }
-                return NotFound();
+                return BadRequest(); 
             }
-            return BadRequest(ModelState);
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }

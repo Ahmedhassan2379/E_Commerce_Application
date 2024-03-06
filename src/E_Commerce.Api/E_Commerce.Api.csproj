@@ -21,7 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\E_Commerce.Core\E_Commerce.Core.csproj" />
     <ProjectReference Include="..\E_Commerce.Infrastructure\E_Commerce.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

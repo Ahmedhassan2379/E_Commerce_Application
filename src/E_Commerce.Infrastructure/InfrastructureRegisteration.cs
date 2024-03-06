@@ -22,7 +22,7 @@ namespace E_Commerce.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddDbContext<ApplicationDbContext>(option =>
             {
-                option.UseSqlServer("Data Source=DESKTOP-G7GOH9P\\SQLEXPRESS;Initial Catalog=ECommerce_db;Integrated Security=True;Encrypt=True;Trust Server Certificate=True");
+                option.UseSqlServer(configuration.GetConnectionString("Z2DataConnection"));
             });
             return services;
         }

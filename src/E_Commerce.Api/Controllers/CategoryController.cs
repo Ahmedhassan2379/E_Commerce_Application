@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using E_Commerce.Api.Dtos;
+using E_Commerce.Core.Dtos;
 using E_Commerce.Core.Entities;
 using E_Commerce.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
