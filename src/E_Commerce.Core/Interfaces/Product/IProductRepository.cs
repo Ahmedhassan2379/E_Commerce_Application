@@ -11,7 +11,7 @@ namespace E_Commerce.Core.Interfaces
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams);
+        Task<ReturnProductDto> GetAllAsync(ProductParams productParams);
         Task<bool> AddAsync(CreateProductDto entity);
         Task<bool> UpdateAsync(int id,UpdateProductDto entity);
         Task<bool> DeleteWithPicAsync(int id);

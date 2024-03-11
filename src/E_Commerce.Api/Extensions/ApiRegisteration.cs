@@ -29,7 +29,7 @@ namespace E_Commerce.Api.Extensions
             {
                 opt.AddPolicy("corsPolicy", pol =>
                 {
-                    pol.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200");
+                    pol.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                 });
             });
             return services;

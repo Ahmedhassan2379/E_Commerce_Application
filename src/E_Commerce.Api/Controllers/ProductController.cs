@@ -31,11 +31,10 @@ namespace E_Commerce.Api.Controllers
         {
             //var products = await _unitOfWork.ProductRepository.GetAllAsync(x=>x.category);
             var products = await _unitOfWork.ProductRepository.GetAllAsync(productParams);
-            var totalItems = await _unitOfWork.ProductRepository.CountAsync();
-            var result = _mapper.Map<IReadOnlyList<ProductDto>>(products);
+            var result = _mapper.Map<IReadOnlyList<ProductDto>>(products.productDtos);
             if (products is not  null )
             {
-                return Ok(new Pagination<ProductDto>{ Items=result,Count=totalItems,PageNumber=productParams.PageNumber,PageSize = productParams.PageSize});
+                return Ok(new Pagination<ProductDto>{ Items=result,Count=products.TotalItems,PageNumber=productParams.PageNumber,PageSize = productParams.PageSize});
             }
             return BadRequest("Something Error");
         }

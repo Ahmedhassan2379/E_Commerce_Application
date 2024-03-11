@@ -21,8 +21,9 @@ namespace E_Commerce.Infrastructure.Repositories
             _fileProvider = fileProvider;
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductParams productParams)
+        public async Task<ReturnProductDto> GetAllAsync(ProductParams productParams)
         {
+            var result_ = new ReturnProductDto();
             var products = await _context.Products.Include(x=>x.category).AsNoTracking().ToListAsync();
 
             //Searching
@@ -58,14 +59,15 @@ namespace E_Commerce.Infrastructure.Repositories
                         break;
                 }
             }
+            result_.TotalItems= products.Count;
             //Paging
             productParams.PageNumber = productParams.PageNumber > 0 ? productParams.PageNumber : 1;
             productParams.PageSize = productParams.PageSize > 0 ? productParams.PageSize : 3;
             products = products.Skip((productParams.PageSize) * (productParams.PageNumber - 1)).Take(productParams.PageSize).ToList();
 
 
-            var result =  _mapper.Map<List<ProductDto>>(products);
-            return result;
+            result_.productDtos =  _mapper.Map<List<ProductDto>>(products);
+            return result_;
         }
 
         public async Task<bool> AddAsync(CreateProductDto entity)
